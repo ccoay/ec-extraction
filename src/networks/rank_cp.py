@@ -11,6 +11,7 @@ from networks.mdrnns import *
 class Network(nn.Module):
     def __init__(self, configs):
         super(Network, self).__init__()
+        self.ratio = configs.ratio
         self.bert = BertModel.from_pretrained(configs.bert_cache_path)
         self.reduce = nn.Linear(configs.feat_dim, configs.reduced_dim)
         self.seq2mat = CatReduce(n_in=configs.reduced_dim, n_out=configs.reduced_dim)
@@ -88,10 +89,12 @@ class Network(nn.Module):
         y_mask = torch.FloatTensor(y_mask).to(DEVICE)
         matrix_mask_float = y_mask[:, None] * y_mask[:, :, None] # B, N, N
         matrix_mask_float = matrix_mask_float.to(DEVICE)
-        weighted_matrix_mask_float = matrix_mask_float + configs.ratio * y_mask
+        
         y_emotions = torch.LongTensor(y_emotions).to(DEVICE)
         y_causes = torch.LongTensor(y_causes).to(DEVICE)
         y_table = torch.LongTensor(y_table).to(DEVICE)
+        
+        weighted_matrix_mask_float = matrix_mask_float + self.ratio * y_table
         
         criterion = nn.CrossEntropyLoss(reduction='none')
         

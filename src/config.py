@@ -29,4 +29,4 @@ class Config(object):
         self.l2_bert = 0.01
         self.warmup_proportion = 0.1
         self.adam_epsilon = 1e-8
-        self.ratio = 10
+        self.ratio = 2
