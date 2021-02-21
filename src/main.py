@@ -60,8 +60,8 @@ def main(configs, fold_id):
             
             loss_t, loss_e, loss_c = model.loss_pre(couples_pred, pred_e, pred_c, y_emotions_b, y_causes_b, y_table, y_mask_b)
             
-#             loss = loss_t + loss_e + loss_c
-            loss = loss_t
+            loss = loss_t + loss_e + loss_c
+#             loss = loss_t
             
             loss = loss / configs.gradient_accumulation_steps
             epoch_loss += loss
